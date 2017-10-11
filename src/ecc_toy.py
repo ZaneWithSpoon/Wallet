@@ -3,7 +3,7 @@
     
     Copyrigth 2017, Paul A. Lambert
 """
-from ecc.curves import SECP_256k1
+from ecc.curves import SECP_256k1, BrainPoolP256r1
 from ecc.curves import SmallWeierstrassCurveFp
 from ecc.ecc import string_to_int, int_to_string
 import os
@@ -47,6 +47,13 @@ def ecc_toy2():
     qr = pyqrcode.create( pub_qr_string )
     text_qr = qr.terminal()
     click.echo(text_qr)
+
+def ecc_toy3():
+    curve = BrainPoolP256r1()
+    G = curve.generator()
+    private = 42
+    public = private * G
+    print public.x
 
 
 
@@ -145,6 +152,11 @@ def toy(options):
 @pass_options
 def toy2(options):
     ecc_toy2()
+
+@cli.command(context_settings=dict(help_option_names=['-h', '--help']))
+@pass_options
+def toy3(options):
+    ecc_toy3()
 
 if __name__ == '__main__':
     cli()
