@@ -123,7 +123,7 @@ class SmallWeierstrassCurveFp( EllipticCurveFp ):
         return y
 
     def new_private_key(self):
-        return urandom(self.coord_size)
+        return string_to_int( urandom(self.coord_size) )
 
 
 class KoblitzCurveFp( SmallWeierstrassCurveFp ):
@@ -320,3 +320,11 @@ def int_to_string( x, padto=None ):
         assert padlen >= 0
         result = padlen*chr(0) + result
     return result
+
+def string_to_int( octet_string ):
+    """ Convert a string of bytes into an integer, as per X9.62. """
+    long_int = 0L
+    for c in octet_string:
+        long_int = 256 * long_int + ord( c )
+    return long_int
+
