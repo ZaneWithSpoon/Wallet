@@ -23,6 +23,7 @@
 """
 from ellipticcurve import EllipticCurveFp
 from numbertheory import square_root_mod_prime
+from os import urandom
 
 
 class SmallWeierstrassCurveFp( EllipticCurveFp ):
@@ -121,6 +122,8 @@ class SmallWeierstrassCurveFp( EllipticCurveFp ):
         y = square_root_mod_prime( y_squared, p )
         return y
 
+    def new_private_key(self):
+        return urandom(self.coord_size)
 
 
 class KoblitzCurveFp( SmallWeierstrassCurveFp ):
