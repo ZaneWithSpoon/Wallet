@@ -10,6 +10,8 @@ import os
 import pwd
 import click
 import pyqrcode
+import binascii
+from sha3 import sha3_256
 
 class SimpleCurve( SmallWeierstrassCurveFp ):
     """ Simple test curve y**2 == x**2+x**2+1 mod 23"""
@@ -29,24 +31,44 @@ def ecc_toy():
         print public_key.x
 
 def ecc_toy2():
+    #SECP_256K1 is both the Ethereum and Bitcoin Standard
     curve = SECP_256k1()
     G = curve.generator()
     private = string_to_int( os.urandom(curve.coord_size) )
     public = private * G
+
+    click.echo("private int")
+    click.echo(private)
+    click.echo("pub x and y")
+    click.echo(public.x)
+    click.echo(public.y)
+    click.echo("keccak hash of pub.x")
+    keccak = sha3_256(int_to_string(public.x))
+    click.echo(keccak.hexdigest())
+
+
     priv_b58 = b58encode( int_to_string(private) )
     pub_b58 = b58encode( int_to_string(public.x) )
+
     
     click.echo( 'private key: {}'.format(priv_b58) )
     priv_qr_string = 'bc:' + priv_b58
     qr = pyqrcode.create( priv_qr_string )
     text_qr = qr.terminal()
-    click.echo(text_qr)
+    #click.echo(text_qr)
+
     
     click.echo( 'public key: {}'.format(pub_b58) )
     pub_qr_string = 'bc:' + pub_b58
     qr = pyqrcode.create( pub_qr_string )
     text_qr = qr.terminal()
-    click.echo(text_qr)
+    #click.echo(text_qr)
+
+    click.echo( 'Eth Address: 0x' + keccak.hexdigest()[-40:] )
+    #add_qr_string = 'bc:' + pub_b58
+    #qr = pyqrcode.create( pub_qr_string )
+    #text_qr = qr.terminal()
+    #click.echo(text_qr)
 
 def ecc_toy3():
     curve = BrainPoolP256r1()
