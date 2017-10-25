@@ -40,7 +40,7 @@ class EllipticCurveFp(EllipticCurve):
         # calculate the coord_size
         p = self.p
         assert p >= 0
-        size = 0
+        size = 64
         while p > 0:
             q, r = divmod( p, 256 )
             size += 1

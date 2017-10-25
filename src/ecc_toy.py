@@ -11,6 +11,7 @@ import pwd
 import click
 import pyqrcode
 import binascii
+from sha3 import sha3_256
 
 class SimpleCurve( SmallWeierstrassCurveFp ):
     """ Simple test curve y**2 == x**2+x**2+1 mod 23"""
@@ -41,6 +42,10 @@ def ecc_toy2():
     click.echo("pub x and y")
     click.echo(public.x)
     click.echo(public.y)
+    click.echo("keccak hash of pub.x")
+    keccak = sha3_256(int_to_string(public.x))
+    click.echo(keccak.hexdigest())
+
 
     priv_b58 = b58encode( int_to_string(private) )
     pub_b58 = b58encode( int_to_string(public.x) )
@@ -59,6 +64,11 @@ def ecc_toy2():
     text_qr = qr.terminal()
     #click.echo(text_qr)
 
+    click.echo( 'Eth Address: 0x' + keccak.hexdigest()[-40:] )
+    #add_qr_string = 'bc:' + pub_b58
+    #qr = pyqrcode.create( pub_qr_string )
+    #text_qr = qr.terminal()
+    #click.echo(text_qr)
 
 
 
